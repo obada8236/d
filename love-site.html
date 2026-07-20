@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#030014" />
+  <meta name="description" content="لكل من تحب — قصة حب رقمية" />
+  <title>بحبك ❤️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { 
+      --bg: #030014;
+      --text: #f5f0ff;
+      --muted: rgba(255,255,255,.55);
+      --primary: #e879f9;
+      --secondary: #818cf8;
+      --accent: #f472b6;
+      --glass: rgba(255,255,255,.06);
+      --border: rgba(255,255,255,.12);
+      --radius: 1.25rem;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Cairo', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-hand { font-family: 'Great Vibes', cursive; }
+    .gradient-text {
+      background: linear-gradient(135deg, #fff, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .section { padding: 3.5rem 1rem 4rem; max-width: 72rem; margin: 0 auto; }
+    .section-title { text-align: center; margin-bottom: 2rem; }
+    .section-title h2 { font-size: clamp(1.6rem, 5vw, 2.5rem); font-weight: 700; }
+    .section-title p { color: var(--muted); font-size: .95rem; margin-top: .5rem; padding: 0 .5rem; }
+    .divider { width: 4rem; height: 2px; margin: 1rem auto 0; background: linear-gradient(90deg, transparent, var(--primary), transparent); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+      padding: .9rem 1.75rem; border: none; border-radius: 999px; cursor: pointer;
+      font-family: inherit; font-size: 1rem; font-weight: 600; color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      box-shadow: 0 8px 32px rgba(232,121,249,.35);
+      transition: transform .25s, box-shadow .25s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active { transform: scale(.96); }
+    .btn-ghost { background: var(--glass); border: 1px solid var(--border); box-shadow: none; }
+    img { max-width: 100%; display: block; }
+    .hidden { display: none !important; }
+
+    /* ── PASSWORD ── */
+    #password-screen {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(ellipse at 50% 0%, rgba(232,121,249,.2), transparent 60%), var(--bg);
+      padding: 1.25rem;
+    }
+    .password-card { width: 100%; max-width: 22rem; padding: 2rem 1.5rem; text-align: center; }
+    .password-card h1 { font-size: 1.5rem; margin-bottom: .35rem; }
+    .password-card p { color: var(--muted); font-size: .9rem; margin-bottom: 1.5rem; }
+    .password-card input {
+      width: 100%; padding: .85rem 1rem; border-radius: .75rem;
+      border: 1px solid var(--border); background: rgba(0,0,0,.3);
+      color: var(--text); font-family: inherit; font-size: 1rem;
+      text-align: center; margin-bottom: 1rem; outline: none;
+    }
+    .password-card input:focus { border-color: var(--primary); }
+    .password-error { color: #f87171; font-size: .85rem; min-height: 1.25rem; margin-bottom: .5rem; }
+
+    /* ── LOADER ── */
+    #loader {
+      position: fixed; inset: 0; z-index: 9000;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: var(--bg); transition: opacity .8s, visibility .8s;
+    }
+    #loader.out { opacity: 0; visibility: hidden; pointer-events: none; }
+    .loader-text { font-size: clamp(1.4rem, 5vw, 2.2rem); font-weight: 300; text-align: center; padding: 0 1rem; }
+    .loader-dots { display: flex; gap: .4rem; margin-top: 2rem; }
+    .loader-dots span {
+      width: 2rem; height: 3px; border-radius: 2px; background: var(--primary);
+      animation: pulse-bar 1.2s ease-in-out infinite;
+    }
+    .loader-dots span:nth-child(2) { animation-delay: .2s; }
+    .loader-dots span:nth-child(3) { animation-delay: .4s; }
+    @keyframes pulse-bar { 0%,100%{opacity:.3;transform:scaleX(.4)} 50%{opacity:1;transform:scaleX(1)} }
+
+    /* ── SCROLL PROGRESS ── */
+    #scroll-progress {
+      position: fixed; top: 0; left: 0; height: 2px; width: 0;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+      z-index: 8000; transition: width .1s linear;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100dvh; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 2rem 1.25rem 4rem;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,121,249,.2), transparent),
+        radial-gradient(ellipse 50% 40% at 90% 60%, rgba(129,140,248,.12), transparent),
+        var(--bg);
+      position: relative; overflow: hidden;
+    }
+    .stars { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .star {
+      position: absolute; width: 2px; height: 2px; background: #fff; border-radius: 50%;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+    @keyframes twinkle { 0%,100%{opacity:.2} 50%{opacity:1} }
+    .hero-content { position: relative; z-index: 2; max-width: 40rem; }
+    .hero-tag { font-size: .75rem; letter-spacing: .25em; text-transform: uppercase; color: var(--primary); margin-bottom: 1rem; }
+    .hero-title { font-size: clamp(1.75rem, 7vw, 3.5rem); font-weight: 700; line-height: 1.25; margin-bottom: 1.25rem; }
+    .hero-sub { color: var(--muted); font-size: clamp(.95rem, 3.5vw, 1.15rem); min-height: 1.5em; }
+    .hero-sub::after { content: '|'; animation: blink .8s step-end infinite; margin-right: 2px; }
+    @keyframes blink { 50%{opacity:0} }
+    .scroll-hint { position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--muted); font-size: .75rem; animation: bounce 2s ease infinite; }
+    @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+    /* ── TIMELINE ── */
+    .timeline { position: relative; padding-right: 1.5rem; }
+    .timeline::before {
+      content: ''; position: absolute; right: .45rem; top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(180deg, var(--primary), var(--secondary), transparent);
+    }
+    .timeline-item { position: relative; margin-bottom: 2rem; padding-right: 1.75rem; opacity: 0; transform: translateY(30px); transition: all .7s ease; }
+    .timeline-item.visible { opacity: 1; transform: translateY(0); }
+    .timeline-dot {
+      position: absolute; right: -.15rem; top: 1.25rem; width: .75rem; height: .75rem;
+      border-radius: 50%; background: var(--primary); box-shadow: 0 0 12px var(--primary);
+    }
+    .timeline-card { overflow: hidden; }
+    .timeline-card img { width: 100%; aspect-ratio: 16/10; object-fit: cover; }
+    .timeline-card-body { padding: 1.1rem; }
+    .timeline-date { font-size: .75rem; color: var(--primary); font-weight: 600; }
+    .timeline-card h3 { font-size: 1.15rem; margin: .35rem 0; }
+    .timeline-card p { font-size: .9rem; color: var(--muted); }
+
+    /* ── GALLERY ── */
+    .gallery-grid { columns: 2; column-gap: .75rem; }
+    @media (min-width: 640px) { .gallery-grid { columns: 3; column-gap: 1rem; } }
+    .gallery-item {
+      break-inside: avoid; margin-bottom: .75rem; border-radius: var(--radius);
+      overflow: hidden; cursor: pointer; position: relative;
+      opacity: 0; transform: translateY(20px); transition: all .5s ease;
+    }
+    .gallery-item.visible { opacity: 1; transform: translateY(0); }
+    .gallery-item img { width: 100%; border-radius: var(--radius); transition: transform .4s; }
+    .gallery-item:active img { transform: scale(1.03); }
+    .gallery-caption {
+      position: absolute; bottom: 0; left: 0; right: 0; padding: .75rem;
+      background: linear-gradient(transparent, rgba(0,0,0,.8));
+      font-size: .8rem; opacity: 0; transition: opacity .3s;
+    }
+    @media (hover: hover) { .gallery-item:hover .gallery-caption { opacity: 1; } }
+    @media (hover: none) { .gallery-caption { opacity: 1; font-size: .75rem; } }
+
+    /* ── MODAL ── */
+    #gallery-modal {
+      position: fixed; inset: 0; z-index: 7000;
+      background: rgba(0,0,0,.92); display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 1rem;
+      opacity: 0; visibility: hidden; transition: all .3s;
+    }
+    #gallery-modal.open { opacity: 1; visibility: visible; }
+    #gallery-modal img { max-height: 70dvh; max-height: 70vh; border-radius: var(--radius); object-fit: contain; }
+    #gallery-modal p { color: var(--muted); margin-top: 1rem; text-align: center; font-size: .95rem; }
+    .modal-close {
+      position: absolute; top: 1rem; left: 1rem; width: 2.5rem; height: 2.5rem;
+      border-radius: 50%; border: 1px solid var(--border); background: var(--glass);
+      color: #fff; font-size: 1.25rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .modal-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1px solid var(--border);
+      background: var(--glass); color: #fff; font-size: 1.5rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-prev { right: .75rem; }
+    .modal-next { left: .75rem; }
+
+    /* ── FLIP CARDS ── */
+    .notes-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    @media (min-width: 640px) { .notes-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .notes-grid { grid-template-columns: repeat(3, 1fr); } }
+    .flip-card { height: 18rem; perspective: 1000px; cursor: pointer; }
+    .flip-inner {
+      position: relative; width: 100%; height: 100%;
+      transition: transform .7s cubic-bezier(.4,0,.2,1); transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+    .flip-front, .flip-back {
+      position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 1.25rem; text-align: center;
+    }
+    .flip-back { transform: rotateY(180deg); overflow-y: auto; justify-content: flex-start; padding-top: 1.5rem; }
+    .flip-back .note-block { text-align: right; width: 100%; margin-bottom: .75rem; font-size: .82rem; }
+    .flip-back .note-label { color: var(--primary); font-weight: 600; font-size: .78rem; margin-bottom: .15rem; }
+    .flip-front .heart-icon { font-size: 2rem; margin-bottom: .5rem; }
+
+    /* ── REASONS ── */
+    .reasons-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+    @media (min-width: 640px) { .reasons-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; } }
+    @media (min-width: 1024px) { .reasons-grid { grid-template-columns: repeat(4, 1fr); } }
+    .reason-card {
+      padding: 1rem .75rem; text-align: center;
+      opacity: 0; transform: scale(.9); transition: all .5s ease;
+      animation: float 5s ease-in-out infinite;
+    }
+    .reason-card.visible { opacity: 1; transform: scale(1); }
+    .reason-card:nth-child(odd) { animation-delay: -2s; }
+    .reason-icon { font-size: 1.75rem; margin-bottom: .4rem; }
+    .reason-card h4 { font-size: .85rem; margin-bottom: .25rem; }
+    .reason-card p { font-size: .72rem; color: var(--muted); line-height: 1.5; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+
+    /* ── MUSIC ── */
+    .music-player { max-width: 22rem; margin: 0 auto; padding: 1.5rem; text-align: center; }
+    .music-cover {
+      width: 10rem; height: 10rem; margin: 0 auto 1.25rem; border-radius: 1rem;
+      overflow: hidden; position: relative; box-shadow: 0 12px 40px rgba(0,0,0,.4);
+    }
+    .music-cover img { width: 100%; height: 100%; object-fit: cover; }
+    .music-cover.playing { animation: spin 8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .music-progress { width: 100%; height: 4px; background: rgba(255,255,255,.1); border-radius: 2px; margin: 1rem 0 .5rem; cursor: pointer; }
+    .music-progress-bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 2px; transition: width .1s; }
+    .music-times { display: flex; justify-content: space-between; font-size: .72rem; color: var(--muted); }
+    .music-controls { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1rem; }
+    .music-btn {
+      width: 3.5rem; height: 3.5rem; border-radius: 50%; border: none; cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; font-size: 1.25rem;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 24px rgba(232,121,249,.4);
+    }
+    .music-btn-sm { width: 2.5rem; height: 2.5rem; background: var(--glass); border: 1px solid var(--border); font-size: 1rem; box-shadow: none; }
+
+    /* ── QUIZ ── */
+    .quiz-box { max-width: 32rem; margin: 0 auto; padding: 1.5rem; }
+    .quiz-progress { height: 4px; background: rgba(255,255,255,.1); border-radius: 2px; margin-bottom: 1.25rem; }
+    .quiz-progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 2px; transition: width .4s; }
+    .quiz-meta { display: flex; justify-content: space-between; font-size: .8rem; color: var(--muted); margin-bottom: 1rem; }
+    .quiz-question { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; }
+    .quiz-option {
+      display: block; width: 100%; text-align: right; padding: .9rem 1rem; margin-bottom: .6rem;
+      border-radius: .75rem; border: 1px solid var(--border); background: rgba(255,255,255,.04);
+      color: var(--text); font-family: inherit; font-size: .9rem; cursor: pointer; transition: all .2s;
+    }
+    .quiz-option:active { transform: scale(.98); }
+    .quiz-option.correct { border-color: #4ade80; background: rgba(74,222,128,.1); }
+    .quiz-option.wrong { border-color: #f87171; background: rgba(248,113,113,.1); }
+    .quiz-feedback { text-align: center; margin: 1rem 0; font-size: .95rem; min-height: 1.5rem; }
+
+    /* ── COUNTDOWN ── */
+    .countdown-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+    @media (min-width: 480px) { .countdown-grid { grid-template-columns: repeat(4, 1fr); } }
+    .countdown-unit { padding: 1.25rem .75rem; text-align: center; }
+    .countdown-num { font-size: clamp(2rem, 8vw, 3rem); font-weight: 700; display: block; }
+    .countdown-label { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-top: .25rem; }
+
+    /* ── LETTER ── */
+    .envelope-wrap { display: flex; justify-content: center; padding: 1rem 0; }
+    .envelope {
+      width: 16rem; height: 10rem; position: relative; cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: .5rem; box-shadow: 0 16px 48px rgba(232,121,249,.25);
+      display: flex; align-items: center; justify-content: center; font-size: 2.5rem;
+      transition: transform .3s;
+    }
+    .envelope:active { transform: scale(.95); }
+    .envelope-hint { text-align: center; color: var(--muted); font-size: .85rem; margin-top: .75rem; }
+    .letter-content { max-width: 36rem; margin: 0 auto; padding: 1.5rem; display: none; }
+    .letter-content.open { display: block; animation: slideUp .8s ease; }
+    @keyframes slideUp { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:translateY(0)} }
+    .letter-content p { font-family: 'Great Vibes', cursive; font-size: clamp(1.1rem, 4vw, 1.35rem); line-height: 2; margin-bottom: 1rem; color: rgba(255,255,255,.9); }
+    .letter-greeting, .letter-sign { font-size: clamp(1.5rem, 5vw, 2rem) !important; color: var(--primary) !important; }
+
+    /* ── SURPRISE ── */
+    #surprise { min-height: 70dvh; min-height: 70vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 3rem 1.25rem; position: relative; }
+    #surprise-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 50;
+      opacity: 0; visibility: hidden; transition: all .8s; pointer-events: none;
+    }
+    #surprise-overlay.active { opacity: 1; visibility: visible; }
+    .surprise-msg { position: relative; z-index: 60; padding: 1.5rem; display: none; }
+    .surprise-msg.show { display: block; animation: slideUp 1s ease; }
+    .surprise-msg h2 { font-size: clamp(1.4rem, 5.5vw, 2.75rem); line-height: 1.4; margin-bottom: 1rem; }
+    .surprise-msg p { color: var(--muted); font-size: clamp(.95rem, 3.5vw, 1.15rem); }
+
+    /* ── FOOTER ── */
+    footer { text-align: center; padding: 2rem 1rem calc(2rem + var(--safe-bottom)); border-top: 1px solid rgba(255,255,255,.05); color: var(--muted); font-size: .85rem; }
+
+    /* ── CONFETTI CANVAS ── */
+    #confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════ شاشة الباسوورد ══════════ -->
+  <div id="password-screen">
+    <div class="password-card glass">
+      <h1>ممممممممممممممم</h1>
+      <p>دخلي الباسوورد بالله لاتأكد بس </p>
+      <div class="password-error" id="password-error"></div>
+      <input type="password" id="password-input" placeholder="كلمة المرور" autocomplete="off" />
+      <button class="btn" style="width:100%" onclick="checkPassword()">دخلني دخلني</button>
+    </div>
+  </div>
+
+  <!-- ══════════ شاشة التحميل ══════════ -->
+  <div id="loader" class="hidden">
+    <p class="loader-text" id="loader-text">صُنع بـ ❤️</p>
+    <div class="loader-dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <div id="scroll-progress"></div>
+  <canvas id="confetti-canvas"></canvas>
+
+  <div id="main-site" class="hidden">
+
+    <!-- HERO -->
+    <section id="hero">
+      <div class="stars" id="stars"></div>
+      <div class="hero-content">
+        <p class="hero-tag" id="hero-tag"></p>
+        <h1 class="hero-title gradient-text" id="hero-title"></h1>
+        <p class="hero-sub" id="hero-sub"></p>
+        <div style="margin-top:2rem">
+          <button class="btn" onclick="scrollTo('timeline')">وانا بحبك</button>
+        </div>
+      </div>
+      <div class="scroll-hint">↓</div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="section" id="timeline">
+      <div class="section-title">
+        <h2 class="gradient-text" id="timeline-heading"></h2>
+        <p id="timeline-sub"></p>
+        <div class="divider"></div>
+      </div>
+      <div class="timeline" id="timeline-list"></div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="section" id="gallery">
+      <div class="section-title">
+        <h2 class="gradient-text" id="gallery-heading"></h2>
+        <p id="gallery-sub"></p>
+        <div class="divider"></div>
+      </div>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </section>
+
+    <!-- LOVE NOTES -->
+    <section class="section" id="notes">
+      <div class="section-title">
+        <h2 class="gradient-text" id="notes-heading"></h2>
+        <p id="notes-sub"></p>
+        <div class="divider"></div>
+      </div>
+      <div class="notes-grid" id="notes-grid"></div>
+    </section>
+
+    <!-- REASONS -->
+    <section class="section" id="reasons">
+      <div class="section-title">
+        <h2 class="gradient-text" id="reasons-heading"></h2>
+        <p id="reasons-sub"></p>
+        <div class="divider"></div>
+      </div>
+      <div class="reasons-grid" id="reasons-grid"></div>
+    </section>
+
+    <!-- MUSIC -->
+    <section class="section" id="music">
+      <div class="section-title">
+        <h2 class="gradient-text" id="music-heading"></h2>
+        <p id="music-sub"></p>
+        <div class="divider"></div>
+      </div>
+      <div class="music-player glass">
+        <div class="music-cover" id="music-cover">
+          <img id="music-cover-img" src="" alt="غلاف الأغنية" />
+        </div>
+        <h3 id="music-title" style="font-size:1.1rem"></h3>
+        <p id="music-artist" style="color:var(--muted);font-size:.85rem"></p>
+        <div class="music-progress" id="music-progress" onclick="seekMusic(event)">
+          <div class="music-progress-bar" id="music-bar"></div>
+        </div>
+        <div class="music-times"><span id="music-current">0:00</span><span id="music-duration">0:00</span></div>
+        <div class="music-controls">
+          <button class="music-btn music-btn-sm" onclick="toggleMute()" id="mute-btn" aria-label="كتم">🔇</button>
+          <button class="music-btn" onclick="toggleMusic()" id="play-btn" aria-label="تشغيل">▶</button>
+        </div>
+        <audio id="audio" preload="metadata"></audio>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="section" id="quiz">
+      <div class="section-title">
+        <h2 class="gradient-text" id="quiz-heading"></h2>
+        <p id="quiz-sub"></p>
+        <div class="divider"></div>
+      </div>
+      <div class="quiz-box glass" id="quiz-box"></div>
+    </section>
+
+    <!-- COUNTDOWN -->
+    <section class="section" id="countdown">
+      <div class="section-title">
+        <h2 class="gradient-text" id="countdown-heading"></h2>
+        <p id="countdown-sub"></p>
+        <div class="divider"></div>
+      </div>
+      <div class="countdown-grid" id="countdown-grid"></div>
+    </section>
+
+    <!-- LETTER -->
+    <section class="section" id="letter">
+      <div class="section-title">
+        <h2 class="gradient-text" id="letter-heading"></h2>
+        <p id="letter-sub"></p>
+        <div class="divider"></div>
+      </div>
+      <div class="envelope-wrap" id="envelope-wrap">
+        <div>
+          <div class="envelope" onclick="openLetter()" role="button" tabindex="0" aria-label="افتح الرسالة">💌</div>
+          <p class="envelope-hint">اضغط لفتح الرسالة</p>
+        </div>
+      </div>
+      <div class="letter-content glass" id="letter-content"></div>
+    </section>
+
+    <!-- SURPRISE -->
+    <section id="surprise">
+      <div id="surprise-overlay"></div>
+      <div id="surprise-btn-wrap">
+        <button class="btn" onclick="openHeart()">افتح قلبي 💖</button>
+      </div>
+      <div class="surprise-msg" id="surprise-msg">
+        <h2 class="gradient-text" id="surprise-main"></h2>
+        <p id="surprise-sub"></p>
+      </div>
+    </section>
+
+    <footer>
+      <p>صُنع بـ ❤️ — <span id="footer-year"></span></p>
+    </footer>
+  </div>
+
+  <!-- GALLERY MODAL -->
+  <div id="gallery-modal" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="closeGallery()" aria-label="إغلاق">✕</button>
+    <button class="modal-nav modal-prev" onclick="galleryNav(-1)" aria-label="السابق">›</button>
+    <button class="modal-nav modal-next" onclick="galleryNav(1)" aria-label="التالي">‹</button>
+    <img id="modal-img" src="" alt="" />
+    <p id="modal-caption"></p>
+  </div>
+
+  <script>
+  /* ╔══════════════════════════════════════════════════════════════════╗
+     ║                                                                ║
+     ║   📝 هون كل الإعدادات — عدّل هاد القسم بس!                    ║
+     ║                                                                ║
+     ╚══════════════════════════════════════════════════════════════════╝ */
+
+  const CONFIG = {
+
+    /* ── 🔐 الباسوورد ──
+       غيّر النص بين علامتي التنصيص */
+    password: "loveudiana",
+
+
+    /* ── 🏠 الصفحة الرئيسية (Hero) ── */
+    hero: {
+      tag: "مالك صافنه",
+      title: "ترا بحبك (للتذكير بس)",
+      subtitle: "انزل لتحت بالله يا حبيبي",
+      loaderText1: "صُنع بـ ❤️",
+      loaderText2: "بحبك",
+    },
+
+
+    /* ── 📅 موعد اللقاء القادم (Countdown) ──
+       الصيغة: "YYYY-MM-DDTHH:MM:SS"
+       مثال: 14 أغسطس 2026 الساعة 7 مساءً */
+    countdown: {
+      targetDate: "2026-08-14T19:00:00",
+      heading: "العد التنازلي",
+      subtitle: "العد التنازلي للسر",
+    },
+
+
+    /* ── 🎵 الموسيقى ──
+       ضع ملف الأغنية بنفس مجلد ملف HTML أو بمجلد فرعي
+       مثال: "our-song.mp3" أو "audio/our-song.mp3"
+       ضع صورة الغلاف بنفس الطريقة */
+    music: {
+      title: "We fell in love in october",
+      artist: "Girl in red",
+      audio: "audio/our-song.mp3",
+      cover: "https://media.discordapp.net/attachments/1305930554390347829/1528759008733827134/ab67616d0000b273eb13fbc012815ea6e834e842.png?ex=6a5f7746&is=6a5e25c6&hm=a12801d742744d736bc117464473ea0757693439c63dfa5b56873243ef989515&=&format=webp&quality=lossless&width=429&height=429",
+      // إذا ما عندك صور محلية، استخدم رابط من الإنترنت:
+      // cover: "https://images.unsplash.com/photo-1511379938543-c1f69419868d?w=400&h=400&fit=crop",
+    },
+
+
+    /* ── 💌 الرسالة السرية ── */
+    letter: {
+      heading: "رسالة سرية",
+      subtitle: "شي كتبته إلك بس...",
+      greeting: "حبيبتي الغالية،",
+      paragraphs: [
+        "إذا عم تقرأي هاد، يعني مشيتِ بقصتنا — كل ذكرى، كل ضحكة، كل سبب بخفق قلبي لما بفكر فيكِ.",
+        "من أول يوم التقينا فيه، حياتي اكتسبت لون ما كنت أعرف إنه ناقص. حولتِ أيام عادية لمغامرات، وأمسيات هادية لذكريات أعتز فيها.",
+        "بعجب فيكِ قوتكِ، لطفكِ، أحلامكِ، وطريقة حبكِ العميقة. بتخلّيني بدي أكون أحسن نسخة من حالي.",
+        "وعدتِكِ إني بختاركِ كل يوم — بالفرح والحزن، بالمطر والشمس. إنتِ شخصي، بيتي، وأبديتي.",
+        "شكراً لإنكِ إنتِ. شكراً لإنكِ معي. شكراً لكل ذكرى جميلة بتبدأ وتنتهي فيكِ.",
+      ],
+      closing: "لأبد ودائماً،",
+      signature: "بحبك ❤️",
+    },
+
+
+    /* ── 💖 المفاجأة الأخيرة ── */
+    surprise: {
+      main: "بحبك أكثر من أمس، وأقل من بكرة.",
+      sub: "شكراً لإنكِ شخصي المفضل.",
+    },
+
+
+    /* ── 📖 عناوين الأقسام ── */
+    headings: {
+      timeline: { title: "اشياء هيك", subtitle: "كل فصل منا، مكتوب بلحظات أخذت أنفاسي" },
+      gallery: { title: "ذكريات وهيك", subtitle: "لقطات منا — لحظات سعادة مجمدة" },
+      notes: { title: "كلام مرتبطين يع", subtitle: "اضغطي على البطاقة لتكتشفي ما في قلبي" },
+      reasons: { title: "ليش بحبك؟ (كمان كلام مرتبطين)", subtitle: "عشرين سبب ليش قلبي اختاركِ" },
+      music: { title: "شغلي هاي عشان الاجواء", subtitle: "اضغطي تشغيل وخلي الموسيقى تحكي قصتنا" },
+      quiz: { title: "اختبار الذكريات", subtitle: "قديش بتعرفي قصتنا؟" },
+    },
+
+
+    /* ── 📅 الخط الزمني (Timeline) ──
+       لكل حدث:
+       - image: مسار الصورة (مثال: "images/1.jpg")
+       - date: التاريخ
+       - title: العنوان
+       - text: الفقرة */
+    timeline: [
+      {
+        image: "https://media.discordapp.net/attachments/1305930554390347829/1528751295656235088/451b0d12bf9e682287d32f2b8f99f083.jpg?ex=6a5f7017&is=6a5e1e97&hm=80efa8ebda3f6da7e9572cc975ef129518537e1d0dc5b5d9332b85ee29f778a6&=&format=webp&width=503&height=670",
+        date: "مش لاقي التاريخ دبري حالك",
+        title: "يوم التقينا",
+        text: "ما كنت أعرف وقتها، بس دنياي تغيّرت من أول ما قابلتك.",
+      },
+      {
+        image: "https://i.pinimg.com/736x/22/16/93/221693915545497b49634065bc732e4d.jpg",
+        date: "مش لاقيه كمان دبري حالك",
+        title: "قلتلك بحبك اول مرة",
+        text: "اه وبهدلتيني كمان، بس كنتِ أحلى شي صار بحياتي.",
+      },
+    ],
+
+
+    /* ── 🖼️ معرض الصور (Gallery) ──
+       ضع صورك بمجلد images/ بجانب ملف HTML
+       مثال: image: "images/photo1.jpg" */
+    gallery: [
+      { image: "https://media.discordapp.net/attachments/1336708364461408329/1528743062971482202/image.png?ex=6a5f686c&is=6a5e16ec&hm=92159f3a83b27bb8475ecf5f22caf98db398097a2f87e228a84e3509c2e382a3&=&format=webp&quality=lossless&width=572&height=230", caption: "مشاوينا وقت الغروب — سحري." },
+      { image: "https://media.discordapp.net/attachments/1336708364461408329/1528742265663782953/IMG_20250903_215203.jpg?ex=6a5f67ae&is=6a5e162e&hm=61772ae447e1d38e4eb2b4226c436ed3fcd9fb904c58fa9e8c486457af3830cc&=&format=webp&width=802&height=602", caption: "إيدكِ بإيدي — هون بيتي." },
+      { image: "https://media.discordapp.net/attachments/1305930554390347829/1440740310639448216/Screenshot_20251119_192127_com_snapchat_android_MainActivity.jpg?ex=6a5ef539&is=6a5da3b9&hm=65845952b8591fe579cb1df4639c2f3c028b4df6c19c61262a1b946fb5e9fffc&=&format=webp&width=482&height=320", caption: "بتستاهلي كل وردة بالدنيا." },
+      { image: "https://media.discordapp.net/attachments/1305930554390347829/1440740363714298048/Screenshot_20251119_185241_com_snapchat_android_MainActivity.jpg?ex=6a5ef546&is=6a5da3c6&hm=79a995357fec40933bf696b45be0ca16b4dae0f63a440627bcf1e22638c225be&=&format=webp&width=372&height=602", caption: "قعدتنا القهوة مقدسة." },
+      { image: "https://media.discordapp.net/attachments/1305930554390347829/1440740311008809042/Screenshot_20251119_191914_com_snapchat_android_MainActivity.jpg?ex=6a5ef539&is=6a5da3b9&hm=512e6b4a108ef0964afe3313890e6394291df0ff65bc1c3dc8e1245373e34cdb&=&format=webp&width=482&height=585", caption: "حتى المطر رومانسي معكِ." },
+      { image: "https://media.discordapp.net/attachments/1305930554390347829/1440740244420034731/Screenshot_20251119_192205_com_snapchat_android_MainActivity.jpg?ex=6a5ef529&is=6a5da3a9&hm=b1ab38247d7a1f16ebcb5b03ce294c711d310cbf423f99f6f4487f994917bd1a&=&format=webp&width=354&height=602", caption: "إنتِ كوكبتي المفضل." },
+    ],
+
+
+    /* ── 💕 بطاقات الحب (Love Notes) ──
+       اضغطي على البطاقة بالموبايل لتقلب */
+    loveNotes: [
+      {
+        title: "بهدلتيني",
+        memory: "لما قلتلك بحبك وبهدلتيني وسحبتي علي",
+      },
+      {
+        title: "الصبح",
+        memory: "لما كنا نحكي لحد ما يطلع ضو الصبح والكل يكون نام زمان واحنا بنحكي",
+      },
+      {
+        title: "هاي قناتك؟",
+        memory: "لما قلتلك هاي قناتك وانا مش مهتم لو قناتك بس عشان احكي معك وزبطت معي ههههههههه",
+      },
+      {
+        title: "بندورة",
+        memory: "لما غنيتلك انا البندورة الحمرة وكان الموضوع خرا كثير"
+      }
+    ],
+
+
+    /* ── ❤️ أسباب الحب (20 سبب) ──
+       icon: أي إيموجي */
+    reasons: [
+      { icon: "❤️", title: "قلبكِ", text: "أطيب وأحن قلب عرفته." },
+      { icon: "😊", title: "ابتسامتكِ", text: "بتوقف الوقت وتعيد تشغيل دنياي." },
+      { icon: "✨", title: "سحركِ", text: "بتحوّلي اللحظات العادية لاستثنائية." },
+      { icon: "🧠", title: "عقلكِ", text: "ذكية، فضولية، ومثيرة للاهتمام." },
+      { icon: "😂", title: "ضحكتكِ", text: "بتضحكيني لحد ما وجني يوجعوني." },
+      { icon: "👀", title: "عيونكِ", text: "نوافذ لروح ما بدي أبعد عنها." },
+      { icon: "🤲", title: "اهتمامكِ", text: "بتهتمي بكل حواليكِ بعمق." },
+      { icon: "🎵", title: "صوتكِ", text: "ناعم، دافي، وأحلى صوت." },
+      { icon: "⭐", title: "أحلامكِ", text: "طموحة وجميلة — بآمن بكل وحدة." },
+      { icon: "☀️", title: "طاقتكِ", text: "بتجيبي نور لكل مكان بتدخلي." },
+      { icon: "🛡️", title: "قوتكِ", text: "قوية بهدوء وبتلهميني." },
+      { icon: "☕", title: "طقوسنا", text: "حتى قهوتنا الصبحية قصة حب." },
+      { icon: "🧭", title: "مغامراتنا", text: "بتحوّلي كل رحلة لكنز." },
+      { icon: "🪶", title: "رقتكِ", text: "بتتحركي بالحياة بأناقة." },
+      { icon: "🌙", title: "هدوءكِ", text: "إنتِ سلامي بعد أطول الأيام." },
+      { icon: "🔥", title: "شغفكِ", text: "بحبّي بنار بتدفيني." },
+      { icon: "📖", title: "حكاياتكِ", text: "كل قصة بتحكيها بتصير مفضلتي." },
+      { icon: "🎁", title: "تفكيركِ", text: "بتتذكري أصغر التفاصيل عني." },
+      { icon: "♾️", title: "حبكِ", text: "طريقة حبكِ إلي بتخلّيني أحس إني لا يُقهر." },
+      { icon: "👑", title: "كل شي", text: "ببساطة كل شي فيكِ — كلّه." },
+    ],
+
+
+    /* ── 🎮 اختبار الذكريات ──
+       correct: رقم الإجابة الصح (0 = الأولى، 1 = الثانية...) */
+    quiz: [
+      {
+        question: "شو قلتيلي لما قلتلك بحبك",
+        options: ["انا كمان بحبك، بس..", "بهدلتيني وقلتي ليش وكان ضلينا هيك", "حل عني انتا بس صاحب", "وانا بحبك من زمان كثير"],
+        correct: 1,
+      },
+      {
+        question: "شو أكثر شي بحبه فيكِ؟",
+        options: ["ابتسامتكِ", "ضحكتكِ", "لطفكِ", "كل شي"],
+        correct: 3,
+      },
+      {
+        question: "أي أغنية بتذكرني فينا؟",
+        options: ["Law", "Born to die", "بتمنى انساك", "تحبيني"],
+        correct: 0,
+      },
+      {
+        question: "شو اكثر كلمة بقولها",
+        options: ["انداري", "بحبك", "هاتي بوسة", "كيفك"],
+        correct: 1,
+      },
+      {
+        question: "متا اخر مرة حكينا",
+        options: ["قبل شوي", "قبل اسبوع", "قبل شهر", "امس"],
+        correct: 0,
+      },
+    ],
+  };
+
+  /* ══════════════════════════════════════════════════════════════════
+     ⚠️ لا تعدّل تحت هالسطر إلا إذا بتعرف شو بتعمل
+     ══════════════════════════════════════════════════════════════════ */
+
+  let galleryIndex = 0;
+  let quizIndex = 0;
+  let quizScore = 0;
+  let quizAnswered = false;
+
+  // ── Password ──
+  function checkPassword() {
+    const input = document.getElementById('password-input').value;
+    const err = document.getElementById('password-error');
+    if (input === CONFIG.password) {
+      document.getElementById('password-screen').classList.add('hidden');
+      startLoader();
+    } else {
+      err.textContent = 'كلمة المرور غلط — حاولي مرة ثانية';
+      document.getElementById('password-input').value = '';
+    }
+  }
+  document.getElementById('password-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkPassword();
+  });
+
+  // ── Loader ──
+  function startLoader() {
+    const loader = document.getElementById('loader');
+    const text = document.getElementById('loader-text');
+    loader.classList.remove('hidden');
+    text.textContent = CONFIG.hero.loaderText1;
+    setTimeout(() => { text.textContent = CONFIG.hero.loaderText2; }, 2000);
+    setTimeout(() => {
+      loader.classList.add('out');
+      document.getElementById('main-site').classList.remove('hidden');
+      initSite();
+    }, 4500);
+  }
+
+  // ── Init ──
+  function initSite() {
+    document.title = CONFIG.hero.title;
+    document.getElementById('hero-tag').textContent = CONFIG.hero.tag;
+    document.getElementById('hero-title').textContent = CONFIG.hero.title;
+    typeWriter(CONFIG.hero.subtitle, 'hero-sub');
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+    // Headings
+    setHeading('timeline', CONFIG.headings.timeline);
+    setHeading('gallery', CONFIG.headings.gallery);
+    setHeading('notes', CONFIG.headings.notes);
+    setHeading('reasons', CONFIG.headings.reasons);
+    setHeading('music', CONFIG.headings.music);
+    setHeading('quiz', CONFIG.headings.quiz);
+    document.getElementById('countdown-heading').textContent = CONFIG.countdown.heading;
+    document.getElementById('countdown-sub').textContent = CONFIG.countdown.subtitle;
+    document.getElementById('letter-heading').textContent = CONFIG.letter.heading;
+    document.getElementById('letter-sub').textContent = CONFIG.letter.subtitle;
+    document.getElementById('surprise-main').textContent = CONFIG.surprise.main;
+    document.getElementById('surprise-sub').textContent = CONFIG.surprise.sub;
+
+    renderStars();
+    renderTimeline();
+    renderGallery();
+    renderNotes();
+    renderReasons();
+    initMusic();
+    renderQuiz();
+    startCountdown();
+    observeElements();
+    initScrollProgress();
+  }
+
+  function setHeading(id, h) {
+    document.getElementById(id + '-heading').textContent = h.title;
+    document.getElementById(id + '-sub').textContent = h.subtitle;
+  }
+
+  function typeWriter(text, elId) {
+    const el = document.getElementById(elId);
+    let i = 0;
+    el.textContent = '';
+    function type() {
+      if (i < text.length) { el.textContent += text[i]; i++; setTimeout(type, 50); }
+      else setTimeout(() => { el.textContent = ''; i = 0; setTimeout(type, 2000); }, 3000);
+    }
+    type();
+  }
+
+  function scrollTo(id) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ── Stars ──
+  function renderStars() {
+    const container = document.getElementById('stars');
+    for (let i = 0; i < 60; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*2}s`;
+      container.appendChild(s);
+    }
+  }
+
+  // ── Timeline ──
+  function renderTimeline() {
+    const list = document.getElementById('timeline-list');
+    CONFIG.timeline.forEach(item => {
+      list.innerHTML += `
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card glass">
+            <img src="${item.image}" alt="${item.title}" loading="lazy" />
+            <div class="timeline-card-body">
+              <span class="timeline-date">${item.date}</span>
+              <h3>${item.title}</h3>
+              <p>${item.text}</p>
+            </div>
+          </div>
+        </div>`;
+    });
+  }
+
+  // ── Gallery ──
+  function renderGallery() {
+    const grid = document.getElementById('gallery-grid');
+    CONFIG.gallery.forEach((item, i) => {
+      const div = document.createElement('div');
+      div.className = 'gallery-item';
+      div.innerHTML = `<img src="${item.image}" alt="${item.caption}" loading="lazy" /><div class="gallery-caption">${item.caption}</div>`;
+      div.onclick = () => openGallery(i);
+      grid.appendChild(div);
+    });
+  }
+  function openGallery(i) {
+    galleryIndex = i;
+    updateModal();
+    document.getElementById('gallery-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeGallery() {
+    document.getElementById('gallery-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function galleryNav(dir) {
+    galleryIndex = (galleryIndex + dir + CONFIG.gallery.length) % CONFIG.gallery.length;
+    updateModal();
+  }
+  function updateModal() {
+    const item = CONFIG.gallery[galleryIndex];
+    document.getElementById('modal-img').src = item.image;
+    document.getElementById('modal-caption').textContent = item.caption;
+  }
+
+  // ── Love Notes ──
+  function renderNotes() {
+    const grid = document.getElementById('notes-grid');
+    CONFIG.loveNotes.forEach(note => {
+      const card = document.createElement('div');
+      card.className = 'flip-card';
+      card.innerHTML = `
+        <div class="flip-inner">
+          <div class="flip-front glass">
+            <span class="heart-icon">❤️</span>
+            <h3>${note.title}</h3>
+            <p style="color:var(--muted);font-size:.8rem;margin-top:.5rem">اضغطي للكشف</p>
+          </div>
+          <div class="flip-back glass">
+            <div class="note-block"><div class="note-label">✨ ذكرى</div>${note.memory}</div>
+          </div>
+        </div>`;
+      card.onclick = () => card.classList.toggle('flipped');
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Reasons ──
+  function renderReasons() {
+    const grid = document.getElementById('reasons-grid');
+    CONFIG.reasons.forEach(r => {
+      grid.innerHTML += `
+        <div class="reason-card glass">
+          <div class="reason-icon">${r.icon}</div>
+          <h4>${r.title}</h4>
+          <p>${r.text}</p>
+        </div>`;
+    });
+  }
+
+  // ── Music ──
+  function initMusic() {
+    const audio = document.getElementById('audio');
+    document.getElementById('music-title').textContent = CONFIG.music.title;
+    document.getElementById('music-artist').textContent = CONFIG.music.artist;
+    document.getElementById('music-cover-img').src = CONFIG.music.cover;
+    audio.src = CONFIG.music.audio;
+    audio.addEventListener('timeupdate', () => {
+      const pct = (audio.currentTime / audio.duration) * 100 || 0;
+      document.getElementById('music-bar').style.width = pct + '%';
+      document.getElementById('music-current').textContent = fmtTime(audio.currentTime);
+    });
+    audio.addEventListener('loadedmetadata', () => {
+      document.getElementById('music-duration').textContent = fmtTime(audio.duration);
+    });
+    audio.addEventListener('ended', () => {
+      document.getElementById('play-btn').textContent = '▶';
+      document.getElementById('music-cover').classList.remove('playing');
+    });
+  }
+  function toggleMusic() {
+    const audio = document.getElementById('audio');
+    const btn = document.getElementById('play-btn');
+    const cover = document.getElementById('music-cover');
+    if (audio.paused) { audio.play(); btn.textContent = '⏸'; cover.classList.add('playing'); }
+    else { audio.pause(); btn.textContent = '▶'; cover.classList.remove('playing'); }
+  }
+  function toggleMute() {
+    const audio = document.getElementById('audio');
+    audio.muted = !audio.muted;
+    document.getElementById('mute-btn').textContent = audio.muted ? '🔇' : '🔊';
+  }
+  function seekMusic(e) {
+    const audio = document.getElementById('audio');
+    const rect = e.currentTarget.getBoundingClientRect();
+    audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+  }
+  function fmtTime(s) {
+    if (!s || isNaN(s)) return '0:00';
+    return Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
+  }
+
+  // ── Quiz ──
+  function renderQuiz() { showQuestion(); }
+  function showQuestion() {
+    const box = document.getElementById('quiz-box');
+    if (quizIndex >= CONFIG.quiz.length) {
+      box.innerHTML = `
+        <div style="text-align:center">
+          <div style="font-size:2.5rem;margin-bottom:1rem">❤️</div>
+          <h3 style="font-size:1.3rem;margin-bottom:.5rem">نتيجتكِ: ${quizScore}/${CONFIG.quiz.length}</h3>
+          <p style="color:var(--muted);margin-bottom:1.5rem">${quizScore === CONFIG.quiz.length ? 'درجة كاملة! إحنا فعلاً روحين توأم.' : 'مو سيء! قصتنا لسّا عم تُكتب.'}</p>
+          <button class="btn" onclick="resetQuiz()">العب مرة ثانية</button>
+        </div>`;
+      fireConfetti();
+      return;
+    }
+    const q = CONFIG.quiz[quizIndex];
+    const pct = (quizIndex / CONFIG.quiz.length) * 100;
+    box.innerHTML = `
+      <div class="quiz-progress"><div class="quiz-progress-bar" style="width:${pct}%"></div></div>
+      <div class="quiz-meta"><span>سؤال ${quizIndex+1} من ${CONFIG.quiz.length}</span><span>النتيجة: ${quizScore}</span></div>
+      <div class="quiz-question">${q.question}</div>
+      <div id="quiz-options">${q.options.map((o,i) => `<button class="quiz-option" onclick="answerQuiz(${i})">${o}</button>`).join('')}</div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <div id="quiz-next" style="text-align:center;display:none"><button class="btn" onclick="nextQuiz()">${quizIndex < CONFIG.quiz.length-1 ? 'السؤال التالي' : 'شوفي النتيجة'}</button></div>`;
+    quizAnswered = false;
+  }
+  function answerQuiz(i) {
+    if (quizAnswered) return;
+    quizAnswered = true;
+    const q = CONFIG.quiz[quizIndex];
+    const opts = document.querySelectorAll('.quiz-option');
+    opts.forEach((o, idx) => {
+      o.style.pointerEvents = 'none';
+      if (idx === q.correct) o.classList.add('correct');
+      if (idx === i && i !== q.correct) o.classList.add('wrong');
+    });
+    const fb = document.getElementById('quiz-feedback');
+    if (i === q.correct) { quizScore++; fb.innerHTML = '❤️ ممتاز! بتعرفينا كتير منيح!'; fireConfetti(); }
+    else fb.textContent = q.hint || 'مو تماماً — بس بحبكِ!';
+    document.getElementById('quiz-next').style.display = 'block';
+  }
+  function nextQuiz() { quizIndex++; showQuestion(); }
+  function resetQuiz() { quizIndex = 0; quizScore = 0; showQuestion(); }
+
+  // ── Countdown ──
+  function startCountdown() {
+    const units = ['days','hours','minutes','seconds'];
+    const labels = ['يوم','ساعة','دقيقة','ثانية'];
+    const grid = document.getElementById('countdown-grid');
+    labels.forEach(l => {
+      grid.innerHTML += `<div class="countdown-unit glass"><span class="countdown-num gradient-text" data-unit>00</span><span class="countdown-label">${l}</span></div>`;
+    });
+    function update() {
+      const diff = Math.max(0, new Date(CONFIG.countdown.targetDate) - Date.now());
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      const vals = [d, h, m, s];
+      document.querySelectorAll('[data-unit]').forEach((el, i) => el.textContent = String(vals[i]).padStart(2,'0'));
+    }
+    update();
+    setInterval(update, 1000);
+  }
+
+  // ── Letter ──
+  function openLetter() {
+    document.getElementById('envelope-wrap').style.display = 'none';
+    const content = document.getElementById('letter-content');
+    content.classList.add('open');
+    content.innerHTML = `
+      <p class="letter-greeting">${CONFIG.letter.greeting}</p>
+      ${CONFIG.letter.paragraphs.map(p => `<p>${p}</p>`).join('')}
+      <p>${CONFIG.letter.closing}</p>
+      <p class="letter-sign">${CONFIG.letter.signature}</p>`;
+  }
+
+  // ── Surprise ──
+  function openHeart() {
+    document.getElementById('surprise-overlay').classList.add('active');
+    document.getElementById('surprise-btn-wrap').style.display = 'none';
+    document.getElementById('surprise-msg').classList.add('show');
+    fireConfetti();
+    setTimeout(fireConfetti, 600);
+    setTimeout(fireConfetti, 1200);
+  }
+
+  // ── Confetti ──
+  function fireConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const colors = ['#e879f9','#f472b6','#818cf8','#fda4af','#fff'];
+    const particles = Array.from({length: 80}, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height * 0.5 - canvas.height * 0.2,
+      w: Math.random() * 8 + 4, h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vx: (Math.random() - 0.5) * 4, vy: Math.random() * 3 + 2,
+      rot: Math.random() * 360, vr: (Math.random() - 0.5) * 10,
+      life: 1,
+    }));
+    let frame = 0;
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.vy += 0.05; p.rot += p.vr; p.life -= 0.008;
+        if (p.life <= 0) return;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot * Math.PI / 180);
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        ctx.restore();
+      });
+      frame++;
+      if (frame < 120) requestAnimationFrame(draw);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    draw();
+  }
+
+  // ── Scroll animations ──
+  function observeElements() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.timeline-item, .gallery-item, .reason-card').forEach(el => obs.observe(el));
+  }
+
+  function initScrollProgress() {
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+      document.getElementById('scroll-progress').style.width = pct + '%';
+    }, { passive: true });
+  }
+
+  // Keyboard gallery nav
+  document.addEventListener('keydown', e => {
+    const modal = document.getElementById('gallery-modal');
+    if (!modal.classList.contains('open')) return;
+    if (e.key === 'Escape') closeGallery();
+    if (e.key === 'ArrowLeft') galleryNav(1);
+    if (e.key === 'ArrowRight') galleryNav(-1);
+  });
+  </script>
+</body>
+</html>
